@@ -71,7 +71,7 @@ public class LanguageModel {
         double cumulative = 0.0;
         for (int i = 0; i < arr.length; i++) {
             CharData cd = arr[i];
-            cd.p = cd.count / total;
+            cd.p = cd.count * total;
             cumulative += cd.p;
             cd.cp = cumulative;
         }
@@ -98,7 +98,7 @@ public class LanguageModel {
      * @return the generated text
      */
     public String generate(String initialText, int textLength) {
-        if (initialText == null) initialText = "";
+        if (initialText == null) initialText ="";
         if (initialText.length() < wLen) return initialText;
 
         StringBuilder gen = new StringBuilder(initialText);
@@ -123,7 +123,7 @@ public class LanguageModel {
         StringBuilder str = new StringBuilder();
         for (String key : dataMap.keySet()) {
             List keyProbs = dataMap.get(key);
-            str.append(key + " : " + keyProbs + "\n");
+            str.append(key + ":" + keyProbs + "\n");
         }
         return str.toString();
     }
