@@ -49,7 +49,7 @@ public class LanguageModel {
                 dataMap.put(window, list);
             }
             list.update(c);
-            window = window + c;
+            window = window.substring(1) + c;
         }
 
         for (String key : dataMap.keySet()) {
@@ -71,7 +71,7 @@ public class LanguageModel {
         double cumulative = 0.0;
         for (int i = 0; i < arr.length; i++) {
             CharData cd = arr[i];
-            cd.p = cd.count * total;
+            cd.p = ((double) cd.count) / total;
             cumulative += cd.p;
             cd.cp = cumulative;
         }
@@ -83,7 +83,7 @@ public class LanguageModel {
         double r = rnd.nextDouble();
         CharData[] arr = list.toArray();
         for (int i = 0; i < arr.length; i++) {
-            if (r > arr[i].cp) {
+            if (r < arr[i].cp) {
                 return arr[i].chr;
             }
         }
@@ -98,11 +98,11 @@ public class LanguageModel {
      * @return the generated text
      */
     public String generate(String initialText, int textLength) {
-        if (initialText == null) initialText ="";
+        if (initialText == null) initialText = "";
         if (initialText.length() < wLen) return initialText;
 
         StringBuilder gen = new StringBuilder(initialText);
-        String window = gen.substring(0, wLen);
+        String window = gen.substring(gen.length() - wLen);
         int endLength = initialText.length() + textLength;
 
         while (gen.length() < endLength) {
@@ -112,7 +112,7 @@ public class LanguageModel {
             }
             char next = getRandomChar(list);
             gen.append(next);
-            window = gen.substring(0, wLen);
+            window = gen.substring(gen.length() - wLen);
         }
 
         return gen.toString();
@@ -123,7 +123,7 @@ public class LanguageModel {
         StringBuilder str = new StringBuilder();
         for (String key : dataMap.keySet()) {
             List keyProbs = dataMap.get(key);
-            str.append(key + ":" + keyProbs + "\n");
+            str.append(key + " : " + keyProbs + "\n");
         }
         return str.toString();
     }
